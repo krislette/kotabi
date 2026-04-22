@@ -9,7 +9,7 @@
   <p align="center">
     An interactive web prototype for exploring the geographic origins of Japanese loanwords (外来語)
     <br />
-    <a href="https://drive.google.com/file/d/1fwVD-C8sWqJkH_tE7AcHSNZ3gEQP33r6/view?usp=sharing"><strong>Explore the report »</strong></a>
+    <a href="https://drive.google.com/file/d/1wHHo-rQhR82qSyd5Xz94J8_6shjpsySS/view?usp=sharing"><strong>Explore the report »</strong></a>
     <br /><br />
     <a href="#features">Features</a>
     ·
