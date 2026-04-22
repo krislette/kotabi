@@ -8,6 +8,7 @@
 export const ISO2_TO_NUMERIC: Record<string, number> = {
   // European donors
   GB: 826, // English  -> United Kingdom
+  US: 840, // English  -> United States
   FR: 250, // French   -> France
   DE: 276, // German   -> Germany
   PT: 620, // Portuguese

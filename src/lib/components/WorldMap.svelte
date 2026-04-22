@@ -2,7 +2,13 @@
   import { onMount, onDestroy } from "svelte";
   import * as d3 from "d3";
   import * as topojson from "topojson-client";
-  import { activeIso2, activeMode, zoomToCountry } from "../stores/mapStore";
+  import {
+    activeIso2,
+    activeMode,
+    zoomToCountry,
+    zoomToCountries,
+    highlightedIso2s,
+  } from "../stores/mapStore";
   import { ISO2_TO_NUMERIC } from "../isoMapping";
   import type { GairagioData } from "../types";
 
@@ -19,6 +25,8 @@
       .map((v) => v.iso2)
       .filter((iso2) => iso2 !== "XX"),
   );
+  // Treat US as an English-speaking country alongside GB
+  countriesWithData.add("US");
 
   // iso2 -> { country name, total word count } for tooltip
   const iso2Info: Record<string, { country: string; count: number }> = {};
@@ -28,6 +36,11 @@
       iso2Info[meta.iso2] = { country: meta.country, count: 0 };
     }
     iso2Info[meta.iso2].count += meta.words.length;
+  }
+
+  // Mirror GB info for US since they share English loanwords
+  if (iso2Info["GB"]) {
+    iso2Info["US"] = { country: "United States", count: iso2Info["GB"].count };
   }
 
   // Map dimensions
@@ -52,22 +65,29 @@
   let tooltipCount = 0;
 
   // Fill helpers
-  function getFill(iso2: string | undefined, current: string | null): string {
+  function getFill(
+    iso2: string | undefined,
+    current: string | null,
+    highlights: string[],
+  ): string {
     if (!iso2) return "var(--clr-land-empty)";
-    if (iso2 === current) return "var(--clr-accent)";
+    if (iso2 === current || highlights.includes(iso2))
+      return "var(--clr-accent)";
     if (countriesWithData.has(iso2)) return "var(--clr-gold)";
     return "var(--clr-land-empty)";
   }
 
-  function updateFills(current: string | null) {
+  function updateFills(current: string | null, highlights: string[]) {
     if (!mapGroup) return;
     mapGroup
       .selectAll<SVGPathElement, d3.GeoPermissibleObjects>("path.country")
-      .attr("fill", (d: any) => getFill(NUMERIC_TO_ISO2[+d.id], current));
+      .attr("fill", (d: any) =>
+        getFill(NUMERIC_TO_ISO2[+d.id], current, highlights),
+      );
   }
 
   // Re-run whenever activeIso2 changes
-  $: updateFills($activeIso2);
+  $: updateFills($activeIso2, $highlightedIso2s);
 
   $: if ($zoomToCountry && projectionRef && zoomRef && worldRef && svgEl) {
     const iso2 = $zoomToCountry;
@@ -98,6 +118,52 @@
         );
     }
     zoomToCountry.set(null);
+  }
+
+  $: if (
+    $zoomToCountries.length &&
+    projectionRef &&
+    zoomRef &&
+    worldRef &&
+    svgEl
+  ) {
+    const countries = topojson.feature(
+      worldRef,
+      worldRef.objects.countries as any,
+    );
+    const features = $zoomToCountries
+      .map((iso2) => ISO2_TO_NUMERIC[iso2])
+      .map((id) => (countries as any).features.find((f: any) => +f.id === id))
+      .filter(Boolean);
+
+    if (features.length) {
+      const path = d3.geoPath().projection(projectionRef);
+      // merge all bounding boxes
+      let x0 = Infinity,
+        y0 = Infinity,
+        x1 = -Infinity,
+        y1 = -Infinity;
+      for (const f of features) {
+        const [[fx0, fy0], [fx1, fy1]] = path.bounds(f);
+        x0 = Math.min(x0, fx0);
+        y0 = Math.min(y0, fy0);
+        x1 = Math.max(x1, fx1);
+        y1 = Math.max(y1, fy1);
+      }
+      const dx = x1 - x0,
+        dy = y1 - y0;
+      const scale = Math.min(8, 0.9 / Math.max(dx / W, dy / H));
+      const tx = W / 2 - scale * (x0 + dx / 2);
+      const ty = H / 2 - scale * (y0 + dy / 2);
+      d3.select(svgEl)
+        .transition()
+        .duration(750)
+        .call(
+          zoomRef.transform,
+          d3.zoomIdentity.translate(tx, ty).scale(scale),
+        );
+    }
+    zoomToCountries.set([]);
   }
 
   // Mount: fetch topology & draw
@@ -139,7 +205,9 @@
       .join("path")
       .attr("class", "country")
       .attr("d", pathGen as any)
-      .attr("fill", (d: any) => getFill(NUMERIC_TO_ISO2[+d.id], $activeIso2))
+      .attr("fill", (d: any) =>
+        getFill(NUMERIC_TO_ISO2[+d.id], $activeIso2, $highlightedIso2s),
+      )
       .attr("stroke", "#ffffff")
       .attr("stroke-width", 0.4)
       .style("cursor", (d: any) => {
@@ -152,7 +220,7 @@
         const info = iso2Info[iso2];
         if (info) {
           // Highlight on hover (unless it's the active country)
-          if (iso2 !== $activeIso2) {
+          if (iso2 !== $activeIso2 && !$highlightedIso2s.includes(iso2)) {
             d3.select(this).attr("fill", "var(--clr-gold-hover)");
           }
           // Show tooltip
@@ -172,7 +240,10 @@
       })
       .on("mouseleave", function (_event: MouseEvent, d: any) {
         const iso2 = NUMERIC_TO_ISO2[+d.id];
-        d3.select(this).attr("fill", getFill(iso2, $activeIso2));
+        d3.select(this).attr(
+          "fill",
+          getFill(iso2, $activeIso2, $highlightedIso2s),
+        );
         tooltipVisible = false;
       })
       .on("click", (_event: MouseEvent, d: any) => {

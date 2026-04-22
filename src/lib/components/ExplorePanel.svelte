@@ -20,7 +20,7 @@
   let loadMoreEl: HTMLButtonElement;
 
   $: {
-    const iso2 = $activeIso2;
+    const iso2 = $activeIso2 === "US" ? "GB" : $activeIso2;
     if (!iso2) {
       view = null;
     } else {
@@ -34,9 +34,9 @@
           " · ",
         );
         view = {
-          country: entries[0].country,
+          country: $activeIso2 === "US" ? "United States" : entries[0].country,
           languages: langNames,
-          iso2,
+          iso2: $activeIso2!, // Keep actual clicked iso2 for flag
           words: allWords,
         };
         page = 0;

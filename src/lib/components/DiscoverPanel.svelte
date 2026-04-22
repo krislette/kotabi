@@ -4,6 +4,8 @@
     activeMode,
     discoverResult,
     zoomToCountry,
+    zoomToCountries,
+    highlightedIso2s,
   } from "../stores/mapStore";
   import type { PredictResponse } from "../types";
 
@@ -21,6 +23,7 @@
   activeMode.subscribe((mode) => {
     if (mode === "explore") {
       discoverResult.set(null);
+      highlightedIso2s.set([]);
       word = "";
       error = "";
     }
@@ -67,8 +70,13 @@
 
       // Highlight the predicted country on the map
       activeIso2.set(data.prediction.iso2);
-      activeMode.set("discover");
-      zoomToCountry.set(data.prediction.iso2);
+      if (data.prediction.iso2 === "GB") {
+        highlightedIso2s.set(["GB", "US"]);
+        zoomToCountries.set(["GB", "US"]);
+      } else {
+        highlightedIso2s.set([data.prediction.iso2]);
+        zoomToCountry.set(data.prediction.iso2);
+      }
     } catch (e: any) {
       error = e.message ?? "Unknown error";
     } finally {
@@ -85,6 +93,7 @@
     error = "";
     discoverResult.set(null);
     activeIso2.set(null);
+    highlightedIso2s.set([]);
   }
 
   function flag(iso2: string): string {
@@ -154,14 +163,25 @@
 
       <!-- Top prediction -->
       <div class="top-prediction">
-        <img
-          class="pred-flag"
-          src={flag(result.prediction.iso2)}
-          alt={result.prediction.country}
-        />
+        {#if result.prediction.iso2 === "GB"}
+          <div class="pred-flag-split">
+            <img class="flag-left" src={flag("GB")} alt="GB" />
+            <img class="flag-right" src={flag("US")} alt="US" />
+          </div>
+        {:else}
+          <img
+            class="pred-flag"
+            src={flag(result.prediction.iso2)}
+            alt={result.prediction.country}
+          />
+        {/if}
         <div class="pred-info">
           <span class="pred-language">{result.prediction.language}</span>
-          <span class="pred-country">{result.prediction.country}</span>
+          <span class="pred-country">
+            {result.prediction.iso2 === "GB"
+              ? "United Kingdom/United States"
+              : result.prediction.country}
+          </span>
         </div>
         <span class="pred-pct"
           >{(result.prediction.confidence * 100).toFixed(1)}%</span
@@ -172,11 +192,18 @@
       <div class="score-bars">
         {#each result.all_scores as score}
           <div class="score-row">
-            <img
-              class="score-flag"
-              src={flag(score.iso2)}
-              alt={score.language}
-            />
+            {#if score.iso2 === "GB"}
+              <div class="score-flag-split">
+                <img class="flag-left" src={flag("GB")} alt="GB" />
+                <img class="flag-right" src={flag("US")} alt="US" />
+              </div>
+            {:else}
+              <img
+                class="score-flag"
+                src={flag(score.iso2)}
+                alt={score.language}
+              />
+            {/if}
             <span class="score-lang">{score.language}</span>
             <div class="bar-track">
               <div
@@ -455,6 +482,32 @@
     flex-shrink: 0;
   }
 
+  .pred-flag-split {
+    position: relative;
+    width: 48px;
+    height: 36px;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+  }
+
+  .flag-left {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+
+  .flag-right {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+
   .pred-info {
     flex: 1;
     display: flex;
@@ -500,6 +553,15 @@
     height: 21px;
     object-fit: cover;
     border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .score-flag-split {
+    position: relative;
+    width: 28px;
+    height: 21px;
+    border-radius: 2px;
+    overflow: hidden;
     flex-shrink: 0;
   }
 
