@@ -17,6 +17,7 @@
   let view: CountryView | null = null;
   let page = 0;
   let search = "";
+  let loadMoreEl: HTMLButtonElement;
 
   $: {
     const iso2 = $activeIso2;
@@ -119,16 +120,16 @@
           {/if}
         </div>
       {/each}
-    </div>
 
-    {#if hasMore}
-      <button class="load-more" on:click={loadMore}>
-        もっと見る · Show more
-        <span class="count-remaining">
-          ({(view.words.length - pagedWords.length).toLocaleString()} remaining)
-        </span>
-      </button>
-    {/if}
+      {#if hasMore}
+        <button class="load-more" on:click={loadMore} bind:this={loadMoreEl}>
+          もっと見る · Show more
+          <span class="count-remaining">
+            ({(filteredWords.length - pagedWords.length).toLocaleString()} remaining)
+          </span>
+        </button>
+      {/if}
+    </div>
   {/if}
 </div>
 
@@ -381,7 +382,6 @@
 
   /* Load more */
   .load-more {
-    margin: 0 16px 16px;
     padding: 10px;
     background: transparent;
     border: 1px dashed var(--clr-border);
@@ -389,12 +389,13 @@
     color: var(--clr-text-light);
     font-family: var(--font-body);
     font-size: 0.8rem;
-    cursor: pointer;
-    transition: all var(--transition);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
+    cursor: pointer;
+    transition: all var(--transition);
+    width: 100%;
   }
 
   .load-more:hover {
