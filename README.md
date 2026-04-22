@@ -1,47 +1,141 @@
-# Svelte + TS + Vite
+<a id="readme-top"></a>
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+<div align="center">
+    <a href="https://github.com/krislette/bach-or-bot">
+    <img src="public/supalogo.png" alt="Logo" width="80" height="80">
+  </a>
 
-## Recommended IDE Setup
+  <h1>語旅 · Kotabi</h1>
+  <p align="center">
+    An interactive web prototype for exploring the geographic origins of Japanese loanwords (外来語)
+    <br />
+    <a href="https://drive.google.com/file/d/1fwVD-C8sWqJkH_tE7AcHSNZ3gEQP33r6/view?usp=sharing"><strong>Explore the report »</strong></a>
+    <br /><br />
+    <a href="#features">Features</a>
+    ·
+    <a href="#website-snapshots">Snapshots</a>
+    ·
+    <a href="#setup">Setup</a>
+    ·
+    <a href="#project-structure">Structure</a>
+  </p>
+</div>
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+## About The Project
 
-## Need an official Svelte framework?
+語旅 (Kotabi), meaning "word journey," is an interactive web prototype that makes the phenomenon of Japanese loanwords (_gairaigo_, 外来語) explorable and visually engaging. Built with Svelte, TypeScript, and D3.js, it renders a zoomable world map where each donor country is colored using a traditional Japanese pigment palette. Users can click any country to browse its loanwords, or switch to the AI-powered Discover mode to classify a katakana word and predict its donor language, powered by a pre-trained LinearSVC classifier served through a FastAPI backend.
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+This project was built for COSC 402: Current Trends and Topics in Computing (HCI Interactive Prototype).
 
-## Technical considerations
+## Table of Contents
 
-**Why use this over SvelteKit?**
+1. [About The Project](#about-the-project)
+2. [Features](#features)
+3. [Technologies Used](#technologies-used)
+4. [Application Snapshots](#application-snapshots)
+5. [Setup](#setup)
+6. [Project Structure](#project-structure)
+7. [License](#license)
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+## Features
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+- **Interactive World Map**: Zoomable and pannable SVG map with smooth zoom-to-country transitions and constrained pan bounds
+- **Country Color Palette**: Each donor country is assigned a deterministic color from a traditional Japanese pigment palette (山吹, 常磐, 柿, 藤, and more)
+- **Explore Mode (探索)**: Click any colored country to view its national flag, donor language, loanword count, and a searchable, paginated word list
+- **Real-time Search**: Filter loanwords by katakana or English meaning as you type, with a clear button and result count
+- **Discover Mode (発見)**: Enter a katakana word and receive an AI-predicted donor language with confidence scores and a bar chart
+- **Dual UK/US Highlight**: English predictions highlight both the United Kingdom and the United States simultaneously with a combined zoom
+- **Progressive Disclosure**: Word card meanings are clamped to two lines and expand fully on hover
+- **Responsive Feedback**: Bilingual validation messages, loading spinners, disabled states, and automatic result clearing on tab switch
+- **Japanese Aesthetic**: Seigaiha wave header, washi paper tones, vermillion accents, Shippori Mincho B1, and Noto Sans JP typography
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+## Technologies Used
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+| Technology                                       | Purpose                                        |
+| ------------------------------------------------ | ---------------------------------------------- |
+| [Svelte](https://svelte.dev/) + TypeScript       | Frontend framework and type safety             |
+| [Vite](https://vitejs.dev/)                      | Build tool and dev server                      |
+| [D3.js](https://d3js.org/)                       | Map rendering, zoom behavior, and data binding |
+| [TopoJSON](https://github.com/topojson/topojson) | Geographic data (world-atlas)                  |
+| [FastAPI](https://fastapi.tiangolo.com/)         | Backend REST API for AI predictions            |
+| [flagcdn.com](https://flagcdn.com/)              | Country flag images                            |
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+## Website Snapshots
 
-**Why include `.vscode/extensions.json`?**
+**Initial Load**: World map with Japanese pigment country colors and the Explore panel idle state
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+**Explore Mode**: Country selected with flag, language tag, loanword count, search bar, and word cards
 
-**Why enable `allowJs` in the TS template?**
+**Discover Mode**: Katakana input, Analyze button, disclaimer note, and example word chips
 
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
+## Setup
 
-**Why is HMR not preserving my local component state?**
+### Prerequisites
 
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
+- Node.js 18+
+- The [Kotabi API](https://github.com/krislette/kataklassifer) running locally on port `8000`
 
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
+### Installation
 
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+```bash
+git clone https://github.com/krislette/gairaigo-map.git
+cd gairaigo-map
+npm install
 ```
+
+### Run Development Server
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`. Make sure the FastAPI backend is running before using Discover mode.
+
+### Build for Production
+
+```bash
+npm run build
+npm run preview
+```
+
+### Type Check
+
+```bash
+npm run check
+```
+
+## Project Structure
+
+```
+gairaigo-map/
+├── public/
+│ ├── favicon.svg
+│ └── icons.svg
+├── src/
+│ ├── data/
+│ │ └── gairaigo_full.json # 10,378 loanword entries across 37 donor languages
+│ ├── lib/
+│ │ ├── components/
+│ │ │ ├── WorldMap.svelte # D3 map, zoom, pan, country rendering
+│ │ │ ├── ExplorePanel.svelte # Country header, search, word list
+│ │ │ └── DiscoverPanel.svelte # Katakana input, AI prediction, result card
+│ │ ├── stores/
+│ │ │ └── mapStore.ts # Shared reactive state (activeIso2, highlights, zoom)
+│ │ ├── isoMapping.ts # ISO2 ↔ numeric country code mapping
+│ │ └── types.ts # TypeScript interfaces
+│ ├── App.svelte # Root layout, tab bar, header, footer
+│ ├── app.css # Global CSS variables and design tokens
+│ └── main.ts # Entry point
+├── index.html
+├── vite.config.ts
+├── svelte.config.js
+├── tsconfig.json
+├── tsconfig.app.json
+└── tsconfig.node.json
+```
+
+## License
+
+This project is for academic use. Loanword data is sourced from [JMdict/EDICT](https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project), distributed under the [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/) by the Electronic Dictionary Research and Development Group.
+
+<p align="right"><a href="#readme-top">Back to top</a></p>
