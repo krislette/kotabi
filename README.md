@@ -63,7 +63,7 @@ This project was built for COSC 402: Current Trends and Topics in Computing (HCI
 ## Website Snapshots
 
 **Initial Load**: World map with Japanese pigment country colors and the Explore panel idle state
-<img width="1322" height="638" alt="image" src="https://github.com/user-attachments/assets/eefc0cdc-9332-4452-8b70-9f57e392ce9e" />
+<img width="1323" height="637" alt="image" src="https://github.com/user-attachments/assets/d0b2b80d-c1c4-4a92-9728-0b6720917cfa" />
 
 **Explore Mode**: Country selected with flag, language tag, loanword count, search bar, and word cards
 <img width="1323" height="639" alt="image" src="https://github.com/user-attachments/assets/ee5b1b51-9748-4be1-957d-1857b6a215f9" />
