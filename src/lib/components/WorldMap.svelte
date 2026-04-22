@@ -19,6 +19,22 @@
     Object.entries(ISO2_TO_NUMERIC).map(([iso2, num]) => [num, iso2]),
   );
 
+  // Map colors
+  const JP_PALETTE = [
+    "#c8a96e", // 山吹 yamabuki (gold)
+    "#7b9e87", // 常磐 tokiwa (evergreen)
+    "#c47a4a", // 煉瓦 renga (brick red)
+    "#c47e6b", // 柿 kaki (persimmon)
+    "#9b7fa6", // 藤 fuji (wisteria)
+    "#7aab8a", // 若竹 wakatake (bamboo green)
+    "#c4956a", // 黄土 oudo (ochre)
+    "#a67c52", // 茶 cha (tea brown)
+    "#b87c8a", // 桃 momo (peach/plum)
+    "#8a9e6e", // 苔 koke (moss)
+    "#c4a882", // 砂 suna (sand)
+    "#8faa5a", // 黄緑 kiro (yellow-green)
+  ];
+
   // iso2 codes that have at least one loanword in the dataset
   const countriesWithData = new Set<string>(
     Object.values(data)
@@ -73,7 +89,8 @@
     if (!iso2) return "var(--clr-land-empty)";
     if (iso2 === current || highlights.includes(iso2))
       return "var(--clr-accent)";
-    if (countriesWithData.has(iso2)) return "var(--clr-gold)";
+    if (iso2 === "US") return getCountryColor("US");
+    if (countriesWithData.has(iso2)) return getCountryColor(iso2);
     return "var(--clr-land-empty)";
   }
 
@@ -84,6 +101,14 @@
       .attr("fill", (d: any) =>
         getFill(NUMERIC_TO_ISO2[+d.id], current, highlights),
       );
+  }
+
+  function getCountryColor(iso2: string): string {
+    let hash = 0;
+    for (let i = 0; i < iso2.length; i++) {
+      hash = iso2.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return JP_PALETTE[Math.abs(hash) % JP_PALETTE.length];
   }
 
   // Re-run whenever activeIso2 changes
