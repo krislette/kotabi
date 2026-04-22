@@ -214,7 +214,7 @@
 
   .country-name {
     font-family: var(--font-heading);
-    font-size: 1.2rem;
+    font-size: 2rem;
     font-weight: 800;
     color: var(--clr-header);
     line-height: 1;
@@ -232,12 +232,12 @@
     color: var(--clr-accent);
     font-size: 0.7rem;
     font-weight: 700;
-    padding: 2px 8px;
+    padding: 2px 10px;
     border-radius: 20px;
   }
 
   .word-count {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--clr-text-light);
   }
 

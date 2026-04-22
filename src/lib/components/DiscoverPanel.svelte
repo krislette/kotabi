@@ -235,7 +235,7 @@
 
   .intro-jp {
     font-family: var(--font-heading);
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: var(--clr-header);
     text-align: center;
