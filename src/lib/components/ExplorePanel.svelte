@@ -180,8 +180,7 @@
   .country-header {
     padding: 16px 20px;
     background: var(--clr-card-bg);
-    border-bottom: 3px solid var(--clr-accent);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-bottom: 2px solid var(--clr-accent);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -241,7 +240,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 16px;
+    padding: 8px 8px;
     border-bottom: 1px solid var(--clr-border);
     background: var(--clr-bg);
     flex-shrink: 0;
@@ -260,6 +259,8 @@
     transition:
       border-color var(--transition),
       box-shadow var(--transition);
+    height: 50px;
+    margin: 0.5rem;
   }
 
   .search-input:focus {

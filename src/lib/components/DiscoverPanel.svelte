@@ -221,11 +221,10 @@
   /* Intro */
   .intro {
     background: var(--clr-card-bg);
-    border-bottom: 3px solid var(--clr-accent);
+    border-bottom: 2px solid var(--clr-accent);
     border-radius: 0;
     padding: 16px 20px;
     margin: -16px -16px 0 -16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -294,6 +293,8 @@
 
   .katakana-input:disabled {
     opacity: 0.6;
+    pointer-events: none;
+    flex-shrink: 0;
   }
 
   .predict-btn {
@@ -313,6 +314,7 @@
       background var(--transition),
       transform var(--transition);
     min-width: 64px;
+    height: 50px;
   }
 
   .predict-btn:hover:not(:disabled) {
@@ -329,6 +331,7 @@
     font-size: 1rem;
     font-weight: 700;
   }
+
   .btn-en {
     font-size: 0.6rem;
     opacity: 0.8;
