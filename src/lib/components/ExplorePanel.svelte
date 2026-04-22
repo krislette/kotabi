@@ -298,22 +298,23 @@
   .word-card {
     background: var(--clr-card-bg);
     border-radius: var(--radius-card);
-    border-left: 2px solid var(--clr-gold);
+    border: 1px solid var(--clr-border);
+    border-left: 3px solid var(--clr-gold);
     padding: 10px 12px;
-    box-shadow: var(--shadow-card);
     display: flex;
     flex-direction: column;
     gap: 3px;
     height: fit-content;
     transition:
-      transform var(--transition),
-      box-shadow var(--transition);
+      border-color var(--transition),
+      transform var(--transition);
     cursor: default;
   }
 
   .word-card:hover {
+    border-color: var(--clr-gold);
+    border-left: 5px solid var(--clr-gold);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-lift);
   }
 
   .katakana {

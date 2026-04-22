@@ -214,7 +214,7 @@
       );
     background-size: 80px 40px;
 
-    border-bottom: 2px solid var(--clr-accent);
+    border-bottom: 3px solid var(--clr-accent);
     padding: 0 24px;
   }
 
@@ -333,7 +333,7 @@
     overflow: hidden;
   }
 
-  /* ── Tab bar ──────────────────────────────────────────────────── */
+  /* Tab bar */
   .tab-bar {
     display: flex;
     border-bottom: 1px solid var(--clr-border);
@@ -359,6 +359,7 @@
 
   .tab:hover {
     background: var(--clr-bg);
+    border-bottom-color: var(--clr-gold);
   }
 
   .tab.active {
@@ -413,7 +414,7 @@
   .app-footer {
     flex-shrink: 0;
     background: var(--clr-header);
-    border-top: 2px solid var(--clr-accent);
+    border-top: 3px solid var(--clr-accent);
     padding: 6px 24px;
     display: flex;
     align-items: center;
