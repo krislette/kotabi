@@ -1,0 +1,78 @@
+/* Design tokens */
+:root {
+  --clr-bg: #faf6f0; /* warm washi paper                */
+  --clr-header: #1c2b4a; /* Japan indigo (深藍)              */
+  --clr-accent: #bf3131; /* torii gate red (朱色)            */
+  --clr-gold: #c9a84c; /* urushi gold — countries w/ data  */
+  --clr-gold-hover: #d4b862;
+  --clr-sakura: #f5d0d0; /* cherry blossom blush            */
+  --clr-ocean: #c8daea; /* woodblock-print sea             */
+  --clr-land-empty: #e2dbd0; /* blank washi — no data           */
+  --clr-text: #2d2020;
+  --clr-text-light: #7a6a5a;
+  --clr-border: #e0d5c5;
+  --clr-card-bg: #ffffff;
+
+  --font-heading: "Shippori Mincho B1", "Noto Serif JP", Georgia, serif;
+  --font-body: "Noto Sans JP", sans-serif;
+
+  --radius-card: 6px;
+  --shadow-card: 0 2px 12px rgba(44, 24, 8, 0.08);
+  --shadow-lift: 0 6px 24px rgba(44, 24, 8, 0.14);
+  --transition: 0.2s ease;
+}
+
+/* Reset and base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden; /* the app fills the viewport exactly  */
+}
+
+body {
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbar styling (washi aesthetic) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--clr-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--clr-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--clr-text-light);
+}
+
+/* Utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
