@@ -328,8 +328,8 @@
     gap: 8px;
     padding: 16px;
     overflow-y: auto;
-    flex: 1;
     min-height: 0;
+    align-content: start;
   }
 
   .word-card {
@@ -341,6 +341,7 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
+    height: fit-content;
     transition:
       transform var(--transition),
       box-shadow var(--transition);
