@@ -69,7 +69,7 @@
     <div class="empty-state">
       <div class="empty-kanji">地図</div>
       <p class="empty-lead">
-        Click any <span class="highlight">golden country</span> on the map
+        Click any <span class="highlight">country</span> on the map
       </p>
       <p class="empty-sub">
         to explore the Japanese loanwords borrowed from that language.
