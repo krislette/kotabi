@@ -18,6 +18,14 @@
   let result: PredictResponse | null = null;
   discoverResult.subscribe((v) => (result = v));
 
+  activeMode.subscribe((mode) => {
+    if (mode === "explore") {
+      discoverResult.set(null);
+      word = "";
+      error = "";
+    }
+  });
+
   // Katakana validation
   const KATAKANA_RE = /^[\u30A0-\u30FF\u30FC\u30FB\u30FE\u30FD]+$/;
 
