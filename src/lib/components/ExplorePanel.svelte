@@ -40,7 +40,6 @@
           words: allWords,
         };
         page = 0;
-        search = "";
       }
     }
   }
@@ -101,10 +100,6 @@
         placeholder="Search katakana or meaning..."
         class="search-input"
       />
-      <button class="search-btn" on:click={() => (search = search.trim())}>
-        <span class="btn-kanji">検索</span>
-        <span class="btn-en">Search</span>
-      </button>
       {#if search}
         <button class="clear-btn" on:click={() => (search = "")}>✕</button>
       {/if}
@@ -140,6 +135,7 @@
     padding: 0;
     display: flex;
     flex-direction: column;
+    min-height: 0;
   }
 
   /* Empty state */
@@ -269,41 +265,6 @@
   .search-input:focus {
     border-color: var(--clr-accent);
     box-shadow: 0 0 0 3px rgba(191, 49, 49, 0.12);
-  }
-
-  .search-btn {
-    padding: 6px 14px;
-    background: var(--clr-accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-card);
-    cursor: pointer;
-    font-family: var(--font-body);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1px;
-    transition:
-      background var(--transition),
-      transform var(--transition);
-    min-width: 58px;
-  }
-
-  .search-btn:hover {
-    background: #a02828;
-    transform: translateY(-1px);
-  }
-
-  .btn-kanji {
-    font-size: 0.9rem;
-    font-weight: 700;
-  }
-
-  .btn-en {
-    font-size: 0.55rem;
-    opacity: 0.8;
-    letter-spacing: 0.05em;
   }
 
   .clear-btn {
