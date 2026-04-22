@@ -63,10 +63,17 @@ This project was built for COSC 402: Current Trends and Topics in Computing (HCI
 ## Website Snapshots
 
 **Initial Load**: World map with Japanese pigment country colors and the Explore panel idle state
+<img width="1322" height="638" alt="image" src="https://github.com/user-attachments/assets/eefc0cdc-9332-4452-8b70-9f57e392ce9e" />
 
 **Explore Mode**: Country selected with flag, language tag, loanword count, search bar, and word cards
+<img width="1323" height="639" alt="image" src="https://github.com/user-attachments/assets/ee5b1b51-9748-4be1-957d-1857b6a215f9" />
+<img width="1323" height="639" alt="image" src="https://github.com/user-attachments/assets/4f0b5a7e-8ac0-4853-bf62-7d63990abe84" />
+<img width="1322" height="635" alt="image" src="https://github.com/user-attachments/assets/483437fc-0f41-4029-b87b-b49e2dc90d99" />
 
 **Discover Mode**: Katakana input, Analyze button, disclaimer note, and example word chips
+<img width="1321" height="638" alt="image" src="https://github.com/user-attachments/assets/fb55b7d2-e369-483d-b9f1-ea2f87db5876" />
+<img width="1321" height="636" alt="image" src="https://github.com/user-attachments/assets/4bbc3985-5522-4734-9ae4-974a4c3e95b4" />
+<img width="1321" height="637" alt="image" src="https://github.com/user-attachments/assets/c64fdde1-0cfb-441b-ab6f-ec9f2cc57eb0" />
 
 ## Setup
 
