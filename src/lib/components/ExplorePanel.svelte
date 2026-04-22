@@ -81,8 +81,8 @@
     <div class="country-header">
       <div class="header-top">
         <img class="flag-img" src={getFlagUrl(view.iso2)} alt={view.country} />
-        <div class="country-name">{view.country}</div>
       </div>
+      <div class="country-name">{view.country}</div>
       <div class="language-tags">
         {#each view.languages.split(" · ") as lang}
           <span class="lang-tag">{lang}</span>
@@ -204,8 +204,8 @@
   }
 
   .flag-img {
-    width: 36px;
-    height: 27px;
+    width: 48px;
+    height: 32px;
     object-fit: cover;
     border-radius: 3px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
@@ -214,7 +214,7 @@
 
   .country-name {
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: var(--clr-header);
     line-height: 1;
