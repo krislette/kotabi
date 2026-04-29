@@ -233,7 +233,7 @@
       bind:value={text}
       on:keydown={handleKeydown}
       placeholder="e.g. I feel nostalgic and a little tired..."
-      rows="3"
+      rows="2"
       disabled={loading}
       aria-label="Emotion text input"
     />
@@ -417,7 +417,7 @@
 
   .feel-input {
     flex: 1;
-    padding: 10px 14px;
+    padding: 12px 10px;
     font-family: var(--font-body);
     font-size: 0.9rem;
     border: 1.5px solid var(--clr-border);
@@ -425,11 +425,11 @@
     background: var(--clr-card-bg);
     color: var(--clr-header);
     outline: none;
-    resize: none;
     transition:
       border-color var(--transition),
       box-shadow var(--transition);
-    line-height: 1.5;
+    resize: none;
+    height: 3.2rem;
   }
 
   .feel-input:focus {
@@ -446,7 +446,7 @@
   }
 
   .detect-btn {
-    padding: 7px 14px;
+    padding: 7px 8.3px;
     background: var(--clr-accent);
     color: #fff;
     border: none;
@@ -462,8 +462,7 @@
       background var(--transition),
       transform var(--transition);
     min-width: 64px;
-    height: 72px;
-    flex-shrink: 0;
+    height: 50px;
   }
 
   .detect-btn:hover:not(:disabled) {
@@ -479,6 +478,7 @@
     font-size: 1rem;
     font-weight: 700;
   }
+
   .btn-en {
     font-size: 0.6rem;
     opacity: 0.8;
