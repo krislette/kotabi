@@ -25,6 +25,7 @@
   let error = "";
   let result: EmotionResponse | null = null;
   let musicIndex = 0; // which song in the playlist is currently showing
+  let initialVideoId = "";
 
   async function detect() {
     error = "";
@@ -49,6 +50,7 @@
 
       result = await res.json();
       musicIndex = 0;
+      initialVideoId = result!.music_list[0].video_id;
 
       // Clear any leftover discover highlights
       discoverResult.set(null);
@@ -71,18 +73,19 @@
     }
   }
 
-  let transitioning = false;
+  // Use an object so the closure always reads the latest value by reference
+  const state = { transitioning: false };
 
   function nextSong() {
     if (!result) return;
-    transitioning = true;
+    state.transitioning = true;
     musicIndex = (musicIndex + 1) % result.music_list.length;
     ytPlayer?.loadVideoById(result.music_list[musicIndex].video_id);
   }
 
   function prevSong() {
     if (!result) return;
-    transitioning = true;
+    state.transitioning = true;
     musicIndex =
       (musicIndex - 1 + result.music_list.length) % result.music_list.length;
     ytPlayer?.loadVideoById(result.music_list[musicIndex].video_id);
@@ -116,8 +119,8 @@
         ytPlayer = new (window as any).YT.Player(node, {
           events: {
             onStateChange: (e: any) => {
-              if (e.data === 1) transitioning = false; // new video is playing, safe again
-              if (e.data === 0 && !transitioning) nextSong();
+              if (e.data === 1) state.transitioning = false;
+              if (e.data === 0 && !state.transitioning) nextSong();
             },
             onReady: () => {
               ytPlayerStore.set(ytPlayer);
@@ -232,7 +235,7 @@
       <div class="video-wrapper">
         <iframe
           id="yt-feel-player"
-          src="https://www.youtube.com/embed/{currentSong.video_id}?enablejsapi=1&autoplay=1"
+          src="https://www.youtube.com/embed/{initialVideoId}?enablejsapi=1&autoplay=1"
           title={currentSong.title}
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
