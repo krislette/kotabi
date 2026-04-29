@@ -71,9 +71,21 @@
     }
   }
 
+  let transitioning = false;
+
   function nextSong() {
     if (!result) return;
+    transitioning = true;
     musicIndex = (musicIndex + 1) % result.music_list.length;
+    ytPlayer?.loadVideoById(result.music_list[musicIndex].video_id);
+  }
+
+  function prevSong() {
+    if (!result) return;
+    transitioning = true;
+    musicIndex =
+      (musicIndex - 1 + result.music_list.length) % result.music_list.length;
+    ytPlayer?.loadVideoById(result.music_list[musicIndex].video_id);
   }
 
   import { onMount, onDestroy } from "svelte";
@@ -104,7 +116,8 @@
         ytPlayer = new (window as any).YT.Player(node, {
           events: {
             onStateChange: (e: any) => {
-              if (e.data === 0) nextSong(); // 0 = ended
+              if (e.data === 1) transitioning = false; // new video is playing, safe again
+              if (e.data === 0 && !transitioning) nextSong();
             },
             onReady: () => {
               ytPlayerStore.set(ytPlayer);
@@ -117,7 +130,13 @@
       }
     };
     tryBind();
-    return { destroy() { ytPlayer?.destroy(); ytPlayer = null; ytPlayerStore.set(null); } };
+    return {
+      destroy() {
+        ytPlayer?.destroy();
+        ytPlayer = null;
+        ytPlayerStore.set(null);
+      },
+    };
   }
 
   function reset() {
@@ -205,28 +224,30 @@
 
       <div class="music-header">
         <span class="music-title">{currentSong.title}</span>
-        <div class="music-nav">
-          <span class="music-counter"
-            >{musicIndex + 1} / {result.music_list.length}</span
-          >
-          <button class="next-btn" on:click={nextSong} title="Next song">
-            Next ▶
-          </button>
-        </div>
+        <span class="vid-counter"
+          >{musicIndex + 1} / {result.music_list.length}</span
+        >
       </div>
 
       <div class="video-wrapper">
-        {#key currentSong.video_id}
-          <iframe
-            id="yt-feel-player"
-            src="https://www.youtube.com/embed/{currentSong.video_id}?enablejsapi=1&autoplay=1"
-            title={currentSong.title}
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            use:bindYTPlayer
-          />
-        {/key}
+        <iframe
+          id="yt-feel-player"
+          src="https://www.youtube.com/embed/{currentSong.video_id}?enablejsapi=1&autoplay=1"
+          title={currentSong.title}
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          use:bindYTPlayer
+        />
+      </div>
+
+      <div class="vid-nav">
+        <button class="vid-btn" on:click={prevSong} title="Previous song"
+          >◀ Prev</button
+        >
+        <button class="vid-btn" on:click={nextSong} title="Next song"
+          >Next ▶</button
+        >
       </div>
 
       <!-- Loanword recommendations -->
@@ -526,36 +547,26 @@
     text-overflow: ellipsis;
   }
 
-  .music-nav {
+  .music-header {
     display: flex;
     align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
+    justify-content: space-between;
+    gap: 8px;
   }
 
-  .music-counter {
+  .music-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--clr-header);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .vid-counter {
     font-size: 0.7rem;
     color: var(--clr-text-light);
-  }
-
-  .next-btn {
-    padding: 4px 10px;
-    background: var(--clr-accent);
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition:
-      background var(--transition),
-      transform var(--transition);
-    letter-spacing: 0.04em;
-  }
-
-  .next-btn:hover {
-    background: #a02828;
-    transform: translateY(-1px);
+    font-weight: 600;
+    flex-shrink: 0;
   }
 
   .video-wrapper {
@@ -572,6 +583,34 @@
     width: 100%;
     height: 100%;
     border-radius: var(--radius-card);
+  }
+
+  .vid-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: -4px;
+  }
+
+  .vid-btn {
+    flex: 1;
+    background: var(--clr-card-bg);
+    color: var(--clr-header);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-card);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all var(--transition);
+    letter-spacing: 0.04em;
+  }
+
+  .vid-btn:hover {
+    background: var(--clr-sakura);
+    border-color: var(--clr-accent);
+    color: var(--clr-accent);
+    transform: translateY(-1px);
   }
 
   .loanword-list {
