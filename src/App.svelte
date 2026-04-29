@@ -493,7 +493,6 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.75rem;
     cursor: pointer;
   }
 
