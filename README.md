@@ -32,7 +32,7 @@ This project was built for COSC 402: Current Trends and Topics in Computing (HCI
 1. [About The Project](#about-the-project)
 2. [Features](#features)
 3. [Technologies Used](#technologies-used)
-4. [Application Snapshots](#application-snapshots)
+4. [Website Snapshots](#website-snapshots)
 5. [Setup](#setup)
 6. [Project Structure](#project-structure)
 7. [License](#license)
