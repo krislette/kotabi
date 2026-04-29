@@ -75,6 +75,47 @@
     musicIndex = (musicIndex + 1) % result.music_list.length;
   }
 
+  import { onMount, onDestroy } from "svelte";
+
+  let iframeEl: HTMLIFrameElement;
+  let ytPlayer: any = null;
+
+  // Load the YT IFrame API script once
+  onMount(() => {
+    if (!(window as any).YT) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    }
+  });
+
+  onDestroy(() => {
+    ytPlayer?.destroy();
+    ytPlayer = null;
+  });
+
+  // Re-bind YT.Player every time the iframe is (re)rendered
+  function bindYTPlayer(node: HTMLIFrameElement) {
+    iframeEl = node;
+    const tryBind = () => {
+      if ((window as any).YT?.Player) {
+        ytPlayer?.destroy();
+        ytPlayer = new (window as any).YT.Player(node, {
+          events: {
+            onStateChange: (e: any) => {
+              if (e.data === 0) nextSong(); // 0 = ended
+            },
+          },
+        });
+      } else {
+        // API not ready yet — wait for it
+        (window as any).onYouTubeIframeAPIReady = tryBind;
+      }
+    };
+    tryBind();
+    return { destroy() { ytPlayer?.destroy(); ytPlayer = null; } };
+  }
+
   function reset() {
     result = null;
     text = "";
@@ -173,11 +214,13 @@
       <div class="video-wrapper">
         {#key currentSong.video_id}
           <iframe
-            src="https://www.youtube.com/embed/{currentSong.video_id}"
+            id="yt-feel-player"
+            src="https://www.youtube.com/embed/{currentSong.video_id}?enablejsapi=1&autoplay=1"
             title={currentSong.title}
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
+            use:bindYTPlayer
           />
         {/key}
       </div>
