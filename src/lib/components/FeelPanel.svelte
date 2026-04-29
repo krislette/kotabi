@@ -10,14 +10,62 @@
 
   const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 
-  const EMOTION_EMOJI: Record<string, string> = {
-    joy: "😊",
-    sadness: "😢",
-    anger: "😠",
-    fear: "😨",
-    surprise: "😲",
-    disgust: "🤢",
-    neutral: "😐",
+  const EMOTION_KANJI: Record<string, { kanji: string; colorName: string }> = {
+    joy: { kanji: "喜", colorName: "山吹 · yamabuki" },
+    sadness: { kanji: "哀", colorName: "藍 · ai-iro" },
+    anger: { kanji: "怒", colorName: "朱 · shu-iro" },
+    fear: { kanji: "怖", colorName: "鈍 · nibi-iro" },
+    surprise: { kanji: "驚", colorName: "橙 · daidai" },
+    disgust: { kanji: "嫌", colorName: "海松 · miru-iro" },
+    neutral: { kanji: "平", colorName: "和紙 · washi" },
+  };
+
+  const EMOTION_COLORS: Record<
+    string,
+    { bg: string; border: string; text: string; kanji: string }
+  > = {
+    joy: {
+      bg: "#fef3d0",
+      border: "#e8a820",
+      text: "#7a5a10",
+      kanji: "#c8900a",
+    },
+    sadness: {
+      bg: "#d8e4ee",
+      border: "#5a7a9a",
+      text: "#2a4a6a",
+      kanji: "#3a6080",
+    },
+    anger: {
+      bg: "#f5d0d0",
+      border: "#bf3131",
+      text: "#7a1010",
+      kanji: "#a02020",
+    },
+    fear: {
+      bg: "#dddad4",
+      border: "#8a8070",
+      text: "#4a4040",
+      kanji: "#6a6055",
+    },
+    surprise: {
+      bg: "#fde8c8",
+      border: "#d4782a",
+      text: "#7a4010",
+      kanji: "#c06820",
+    },
+    disgust: {
+      bg: "#dae4d0",
+      border: "#6a8a5a",
+      text: "#3a5a2a",
+      kanji: "#507840",
+    },
+    neutral: {
+      bg: "#f0ebe0",
+      border: "#b0a090",
+      text: "#5a4a3a",
+      kanji: "#8a7a6a",
+    },
   };
 
   let text = "";
@@ -215,12 +263,28 @@
       </div>
 
       <!-- Detected emotion badge -->
-      <div class="emotion-badge">
-        <span class="emotion-emoji"
-          >{EMOTION_EMOJI[result.emotion] ?? "🎭"}</span
+      {#if result}
+        {@const ec = EMOTION_COLORS[result.emotion] ?? EMOTION_COLORS.neutral}
+        {@const ek = EMOTION_KANJI[result.emotion] ?? {
+          kanji: "感",
+          colorName: "—",
+        }}
+        <div
+          class="emotion-badge"
+          style="background:{ec.bg}; border-color:{ec.border};"
         >
-        <span class="emotion-label">{result.emotion}</span>
-      </div>
+          <span class="emotion-kanji" style="color:{ec.kanji};">{ek.kanji}</span
+          >
+          <div class="emotion-text-col">
+            <span class="emotion-label" style="color:{ec.text};"
+              >{result.emotion}</span
+            >
+            <span class="emotion-color-name" style="color:{ec.border};"
+              >{ek.colorName}</span
+            >
+          </div>
+        </div>
+      {/if}
 
       <!-- Music section -->
       <div class="section-title">Japanese Music for Your Mood</div>
@@ -502,24 +566,45 @@
   .emotion-badge {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: var(--clr-sakura);
+    gap: 12px;
     border-radius: var(--radius-card);
     padding: 10px 14px;
-    border: 1px solid #f0c0c0;
+    border: 1px solid;
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease;
   }
 
-  .emotion-emoji {
-    font-size: 2rem;
+  .emotion-kanji {
+    font-family: var(--font-heading);
+    font-size: 2.4rem;
+    font-weight: 900;
     line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.3s ease;
+  }
+
+  .emotion-text-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .emotion-label {
     font-family: var(--font-heading);
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 800;
-    color: var(--clr-header);
     text-transform: capitalize;
+    transition: color 0.3s ease;
+  }
+
+  .emotion-color-name {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    opacity: 0.85;
+    transition: color 0.3s ease;
   }
 
   .section-title {
