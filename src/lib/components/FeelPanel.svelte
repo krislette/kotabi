@@ -1,9 +1,5 @@
 <script lang="ts">
-  import {
-    highlightedIso2s,
-    zoomToCountries,
-    activeMode,
-  } from "../stores/mapStore";
+  import { highlightedIso2s, zoomToCountries } from "../stores/mapStore";
   import type { EmotionResponse } from "../types";
 
   const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
@@ -23,16 +19,6 @@
   let error = "";
   let result: EmotionResponse | null = null;
   let musicIndex = 0; // which song in the playlist is currently showing
-
-  activeMode.subscribe((mode) => {
-    if (mode !== "feel") {
-      result = null;
-      text = "";
-      error = "";
-      musicIndex = 0;
-      highlightedIso2s.set([]);
-    }
-  });
 
   async function detect() {
     error = "";

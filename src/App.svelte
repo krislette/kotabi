@@ -106,13 +106,15 @@
 
       <!-- Panel content (swaps based on mode) -->
       <div class="panel-body">
-        {#if $activeMode === "explore"}
+        <div class="panel-slot" class:hidden={$activeMode !== "explore"}>
           <ExplorePanel {data} />
-        {:else if $activeMode === "discover"}
+        </div>
+        <div class="panel-slot" class:hidden={$activeMode !== "discover"}>
           <DiscoverPanel />
-        {:else}
+        </div>
+        <div class="panel-slot" class:hidden={$activeMode !== "feel"}>
           <FeelPanel />
-        {/if}
+        </div>
       </div>
     </aside>
   </main>
@@ -424,6 +426,18 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
+  }
+
+  .panel-slot {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .panel-slot.hidden {
+    display: none;
   }
 
   /* Footer */
