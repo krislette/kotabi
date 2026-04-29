@@ -3,6 +3,7 @@
   import WorldMap from "./lib/components/WorldMap.svelte";
   import ExplorePanel from "./lib/components/ExplorePanel.svelte";
   import DiscoverPanel from "./lib/components/DiscoverPanel.svelte";
+  import FeelPanel from "./lib/components/FeelPanel.svelte";
   import type { GairagioData } from "./lib/types";
 
   // Load gairaigo data
@@ -18,7 +19,7 @@
 
   const wordCount = Object.values(data).reduce((s, m) => s + m.words.length, 0);
 
-  function setMode(mode: "explore" | "discover") {
+  function setMode(mode: "explore" | "discover" | "feel") {
     activeMode.set(mode);
   }
 </script>
@@ -90,14 +91,27 @@
           <span class="tab-en">Discover</span>
           <span class="tab-badge">AI</span>
         </button>
+        <button
+          class="tab"
+          class:active={$activeMode === "feel"}
+          role="tab"
+          aria-selected={$activeMode === "feel"}
+          on:click={() => setMode("feel")}
+        >
+          <span class="tab-jp">感情</span>
+          <span class="tab-en">Feel</span>
+          <span class="tab-badge">NEW</span>
+        </button>
       </div>
 
       <!-- Panel content (swaps based on mode) -->
       <div class="panel-body">
         {#if $activeMode === "explore"}
           <ExplorePanel {data} />
-        {:else}
+        {:else if $activeMode === "discover"}
           <DiscoverPanel />
+        {:else}
+          <FeelPanel />
         {/if}
       </div>
     </aside>
@@ -115,7 +129,9 @@
     <span class="footer-dot">·</span>
     <span>AI model: LinearSVC · character n-gram TF-IDF · 85.29% accuracy</span>
     <span class="footer-dot">·</span>
-    <span>COSC 402 · HCI Interactive Prototype</span>
+    <span>Emotion model: j-hartmann/emotion-english-distilroberta-base</span>
+    <span class="footer-dot">·</span>
+    <span>COSC 402 · Affective Computing</span>
   </footer>
 </div>
 

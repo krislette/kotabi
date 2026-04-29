@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import type { PredictResponse } from "../types";
 
 // Currently active panel tab
-export type AppMode = "explore" | "discover";
+export type AppMode = "explore" | "discover" | "feel";
 export const activeMode = writable<AppMode>("explore");
 
 /**
