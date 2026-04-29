@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { highlightedIso2s, zoomToCountries, discoverResult, activeIso2 } from "../stores/mapStore";
+  import {
+    highlightedIso2s,
+    zoomToCountries,
+    discoverResult,
+    activeIso2,
+  } from "../stores/mapStore";
   import type { EmotionResponse } from "../types";
 
   const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
@@ -49,9 +54,13 @@
       activeIso2.set(null);
 
       // Highlight loanword origin countries; treat GB as GB+US (same as Discover panel)
-      const isos = [...new Set(
-        result!.loanwords.flatMap((w) => w.iso2 === "GB" ? ["GB", "US"] : [w.iso2])
-      )];
+      const isos = [
+        ...new Set(
+          result!.loanwords.flatMap((w) =>
+            w.iso2 === "GB" ? ["GB", "US"] : [w.iso2],
+          ),
+        ),
+      ];
       highlightedIso2s.set(isos);
       zoomToCountries.set(isos);
     } catch (e: any) {
@@ -93,8 +102,11 @@
   <!-- Intro -->
   <div class="intro">
     <p class="intro-jp">感情の旅</p>
-    <p class="intro-en">
-      Describe how you feel — discover matching Japanese music and loanwords.
+    <p class="intro-en">Tell us how you're feeling in plain English.</p>
+    <p class="intro-note">
+      We'll <strong>detect your emotion</strong>, recommend a
+      <strong>song</strong> for your mood, and surface
+      <strong>loanwords</strong> from the map that relate to how you feel.
     </p>
   </div>
 
@@ -195,7 +207,7 @@
     </div>
   {:else if !error}
     <div class="example-hints">
-      <p class="hints-label">Try these:</p>
+      <p class="hints-label">Try these examples:</p>
       <div class="hints-grid">
         {#each ["I feel happy and excited", "I'm feeling sad and lonely", "I'm so angry right now", "I feel scared", "I'm surprised!", "This is disgusting", "Just a normal day"] as ex}
           <button
@@ -224,12 +236,13 @@
   .intro {
     background: var(--clr-card-bg);
     border-bottom: 2px solid var(--clr-accent);
+    border-radius: 0;
     padding: 16px 20px;
     margin: -16px -16px 0 -16px;
     display: flex;
     flex-direction: column;
     gap: 6px;
-    min-height: 100px;
+    min-height: 160px;
     justify-content: center;
   }
 
@@ -242,9 +255,23 @@
   }
 
   .intro-en {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     color: var(--clr-text-light);
     text-align: center;
+  }
+
+  .intro-note {
+    font-size: 0.73rem;
+    color: var(--clr-text-light);
+    margin-top: 4px;
+    background: var(--clr-sakura);
+    padding: 5px 8px;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .intro-note strong {
+    color: var(--clr-accent);
   }
 
   .input-area {
