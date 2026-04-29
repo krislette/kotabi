@@ -4,6 +4,7 @@
     zoomToCountries,
     discoverResult,
     activeIso2,
+    ytPlayerStore,
   } from "../stores/mapStore";
   import type { EmotionResponse } from "../types";
 
@@ -105,6 +106,9 @@
             onStateChange: (e: any) => {
               if (e.data === 0) nextSong(); // 0 = ended
             },
+            onReady: () => {
+              ytPlayerStore.set(ytPlayer);
+            },
           },
         });
       } else {
@@ -113,7 +117,7 @@
       }
     };
     tryBind();
-    return { destroy() { ytPlayer?.destroy(); ytPlayer = null; } };
+    return { destroy() { ytPlayer?.destroy(); ytPlayer = null; ytPlayerStore.set(null); } };
   }
 
   function reset() {

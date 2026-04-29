@@ -19,3 +19,6 @@ export const discoverResult = writable<PredictResponse | null>(null);
 // Triggers the map to zoom to a country by iso2
 export const zoomToCountry = writable<string | null>(null);
 export const zoomToCountries = writable<string[]>([]);
+
+// YouTube player instance from FeelPanel (used for global volume control)
+export const ytPlayerStore = writable<any>(null);

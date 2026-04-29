@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeMode } from "./lib/stores/mapStore";
+  import { activeMode, ytPlayerStore } from "./lib/stores/mapStore";
   import WorldMap from "./lib/components/WorldMap.svelte";
   import ExplorePanel from "./lib/components/ExplorePanel.svelte";
   import DiscoverPanel from "./lib/components/DiscoverPanel.svelte";
@@ -18,6 +18,13 @@
   ).size;
 
   const wordCount = Object.values(data).reduce((s, m) => s + m.words.length, 0);
+
+  let volume = 100;
+
+  function onVolumeChange(e: Event) {
+    volume = +(e.target as HTMLInputElement).value;
+    $ytPlayerStore?.setVolume(volume);
+  }
 
   function setMode(mode: "explore" | "discover" | "feel") {
     activeMode.set(mode);
@@ -133,7 +140,21 @@
     <span class="footer-dot">·</span>
     <span>Emotion model: j-hartmann/emotion-english-distilroberta-base</span>
     <span class="footer-dot">·</span>
-    <span>COSC 402 · Affective Computing</span>
+    <span>COSC 402</span>
+    {#if $ytPlayerStore}
+      <span class="footer-dot">·</span>
+      <label class="vol-control" aria-label="Music volume">
+        🔊
+        <input
+          type="range"
+          min="0"
+          max="100"
+          bind:value={volume}
+          on:input={onVolumeChange}
+          class="vol-slider"
+        />
+      </label>
+    {/if}
   </footer>
 </div>
 
@@ -466,5 +487,19 @@
 
   .footer-dot {
     color: rgba(255, 255, 255, 0.2);
+  }
+
+  .vol-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+
+  .vol-slider {
+    width: 70px;
+    accent-color: var(--clr-gold);
+    cursor: pointer;
   }
 </style>
