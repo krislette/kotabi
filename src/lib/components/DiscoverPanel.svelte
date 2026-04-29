@@ -220,7 +220,7 @@
       </div>
 
       <p class="confidence-note">
-        Confidence is derived from the SVM decision function via softmax —
+        ✦ Confidence is derived from the SVM decision function via softmax —
         useful for ranking, not strict probability.
       </p>
     </div>
@@ -600,6 +600,7 @@
     border-top: 1px solid var(--clr-border);
     padding-top: 8px;
     font-style: italic;
+    text-align: center;
   }
 
   /* Example hints */
