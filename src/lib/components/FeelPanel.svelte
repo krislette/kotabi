@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { highlightedIso2s, zoomToCountries } from "../stores/mapStore";
+  import { highlightedIso2s, zoomToCountries, discoverResult, activeIso2 } from "../stores/mapStore";
   import type { EmotionResponse } from "../types";
 
   const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
@@ -44,7 +44,14 @@
       result = await res.json();
       musicIndex = 0;
 
-      const isos = [...new Set(result!.loanwords.map((w) => w.iso2))];
+      // Clear any leftover discover highlights
+      discoverResult.set(null);
+      activeIso2.set(null);
+
+      // Highlight loanword origin countries; treat GB as GB+US (same as Discover panel)
+      const isos = [...new Set(
+        result!.loanwords.flatMap((w) => w.iso2 === "GB" ? ["GB", "US"] : [w.iso2])
+      )];
       highlightedIso2s.set(isos);
       zoomToCountries.set(isos);
     } catch (e: any) {
@@ -168,7 +175,14 @@
       <div class="loanword-list">
         {#each result.loanwords as word}
           <div class="loanword-card">
-            <img class="lw-flag" src={flag(word.iso2)} alt={word.language} />
+            {#if word.iso2 === "GB"}
+              <div class="lw-flag-split">
+                <img class="flag-left" src={flag("GB")} alt="GB" />
+                <img class="flag-right" src={flag("US")} alt="US" />
+              </div>
+            {:else}
+              <img class="lw-flag" src={flag(word.iso2)} alt={word.language} />
+            {/if}
             <div class="lw-info">
               <span class="lw-katakana">{word.katakana}</span>
               <span class="lw-meaning">{word.meaning}</span>
@@ -517,6 +531,31 @@
     object-fit: cover;
     border-radius: 2px;
     flex-shrink: 0;
+  }
+
+  .lw-flag-split {
+    position: relative;
+    width: 28px;
+    height: 21px;
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .flag-left {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+
+  .flag-right {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
   }
 
   .lw-info {
