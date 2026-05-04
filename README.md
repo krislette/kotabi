@@ -120,6 +120,12 @@ Katakana input, Analyze button, disclaimer note, and example word chips
 
 Emotion input, emotion badge, music player, and related loanwords
 
+<img width="1321" height="639" alt="image" src="https://github.com/user-attachments/assets/bfe030bc-e995-484c-9572-e0ef3e9377fb" />
+
+<img width="1323" height="639" alt="image" src="https://github.com/user-attachments/assets/4527ba4d-a354-41df-bb14-b8e67b6bce42" />
+
+<img width="1322" height="638" alt="image" src="https://github.com/user-attachments/assets/97a202df-f6f5-4a94-8fa3-5165a94c70c0" />
+
 ## Setup
 
 ### Prerequisites
