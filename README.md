@@ -165,20 +165,20 @@ gairaigo-map/
 │ └── icons.svg
 ├── src/
 │ ├── data/
-│ │ └── gairaigo_full.json # 10,378 loanword entries across 37 donor languages
+│ │ └── gairaigo_full.json      # 10,378 loanword entries across 37 donor languages
 │ ├── lib/
 │ │ ├── components/
-│ │ │ ├── WorldMap.svelte # D3 map, zoom, pan, country rendering
-│ │ │ ├── ExplorePanel.svelte # Country header, search, word list
-│ │ │ ├── DiscoverPanel.svelte # Katakana input, AI prediction, result card
-│ │ │ └── FeelPanel.svelte # [NEW] Emotion input, music player, loanword list
+│ │ │ ├── WorldMap.svelte       # D3 map, zoom, pan, country rendering
+│ │ │ ├── ExplorePanel.svelte   # Country header, search, word list
+│ │ │ ├── DiscoverPanel.svelte  # Katakana input, AI prediction, result card
+│ │ │ └── FeelPanel.svelte      # [NEW] Emotion input, music player, loanword list
 │ │ ├── stores/
-│ │ │ └── mapStore.ts # Shared reactive state (activeIso2, highlights, zoom, ytPlayer)
-│ │ ├── isoMapping.ts # ISO2 ↔ numeric country code mapping
-│ │ └── types.ts # TypeScript interfaces (includes EmotionResponse)
-│ ├── App.svelte # Root layout, tab bar (now includes 感情 · Feel tab), header, footer
-│ ├── app.css # Global CSS variables and design tokens
-│ └── main.ts # Entry point
+│ │ │ └── mapStore.ts           # Shared reactive state (activeIso2, highlights, zoom, ytPlayer)
+│ │ ├── isoMapping.ts           # ISO2 <-> numeric country code mapping
+│ │ └── types.ts                # TypeScript interfaces (includes EmotionResponse)
+│ ├── App.svelte                # Root layout, tab bar (now includes 感情 · Feel tab), header, footer
+│ ├── app.css                   # Global CSS variables and design tokens
+│ └── main.ts                   # Entry point
 ├── index.html
 ├── vite.config.ts
 ├── svelte.config.js
