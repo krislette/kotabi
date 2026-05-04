@@ -25,17 +25,18 @@
 
 語旅 (Kotabi), meaning "word journey," is an interactive web prototype that makes the phenomenon of Japanese loanwords (_gairaigo_, 外来語) explorable and visually engaging. Built with Svelte, TypeScript, and D3.js, it renders a zoomable world map where each donor country is colored using a traditional Japanese pigment palette. Users can click any country to browse its loanwords, or switch to the AI-powered Discover mode to classify a katakana word and predict its donor language, powered by a pre-trained LinearSVC classifier served through a FastAPI backend.
 
-This project was built for COSC 402: Current Trends and Topics in Computing (HCI Interactive Prototype).
+This project was built for COSC 402: Current Trends and Topics in Computing (HCI Interactive Prototype). It has since been extended with an emotion detection feature, which is the **Feel (感情) panel**, as part of a follow-up activity: _Extend a prototype with emotion detection feature_.
 
 ## Table of Contents
 
 1. [About The Project](#about-the-project)
 2. [Features](#features)
-3. [Technologies Used](#technologies-used)
-4. [Website Snapshots](#website-snapshots)
-5. [Setup](#setup)
-6. [Project Structure](#project-structure)
-7. [License](#license)
+3. [Extension: Feel Panel](#extension-feel-panel)
+4. [Technologies Used](#technologies-used)
+5. [Website Snapshots](#website-snapshots)
+6. [Setup](#setup)
+7. [Project Structure](#project-structure)
+8. [License](#license)
 
 ## Features
 
@@ -48,36 +49,76 @@ This project was built for COSC 402: Current Trends and Topics in Computing (HCI
 - **Progressive Disclosure**: Word card meanings are clamped to two lines and expand fully on hover
 - **Responsive Feedback**: Bilingual validation messages, loading spinners, disabled states, and automatic result clearing on tab switch
 - **Japanese Aesthetic**: Seigaiha wave header, washi paper tones, vermillion accents, Shippori Mincho B1, and Noto Sans JP typography
+- **Feel Mode (感情)** _(extension)_: Describe your mood in plain English to detect your emotion, receive a curated Japanese music playlist, and surface related loanwords on the map. See [Extension: Feel Panel](#extension-feel-panel)
+
+## Extension: Feel Panel
+
+> This section documents the Feel (感情) panel, which was added as an extension to the original Kotabi prototype.
+
+### Overview
+
+The Feel panel is a third tab alongside Explore and Discover. It lets users describe how they are feeling in plain English. The backend classifies the text into one of seven emotions, joy, sadness, anger, fear, surprise, disgust, or neutral, using a fine-tuned transformer model. The result drives three things in the UI simultaneously: an emotion badge, a Japanese music playlist, and a set of thematically related loanwords highlighted on the map.
+
+### How It Works
+
+1. The user types a free-form English sentence in the textarea (e.g., _"I feel nostalgic and a little tired"_) and clicks **感じる · Detect**, or presses Enter.
+2. The frontend POSTs the text to `POST /emotion` on the FastAPI backend.
+3. The backend runs the text through `j-hartmann/emotion-english-distilroberta-base` (a DistilRoBERTa model fine-tuned for emotion classification) and returns the top emotion label.
+4. The panel renders:
+   - An **emotion badge** showing the detected emotion in English, its Japanese kanji character (e.g., 喜 for joy), and a corresponding traditional Japanese color name (e.g., 山吹 · yamabuki).
+   - A **music section** with an embedded YouTube player and a playlist of Japanese songs curated for that emotion. Users can skip forward and backward through the playlist with Prev/Next buttons. The player auto-advances to the next song when one ends.
+   - A **loanword section** listing gairaigo entries thematically associated with the detected emotion, each showing the katakana, English meaning, donor language, and country flag.
+5. The origin countries of the returned loanwords are **highlighted on the world map** and zoomed into, the same way Discover mode highlights a predicted donor country.
+
+### New File
+
+| File                                  | Description                                                                   |
+| ------------------------------------- | ----------------------------------------------------------------------------- |
+| `src/lib/components/FeelPanel.svelte` | The Feel panel component: input, emotion badge, YouTube player, loanword list |
 
 ## Technologies Used
 
-| Technology                                       | Purpose                                        |
-| ------------------------------------------------ | ---------------------------------------------- |
-| [Svelte](https://svelte.dev/) + TypeScript       | Frontend framework and type safety             |
-| [Vite](https://vitejs.dev/)                      | Build tool and dev server                      |
-| [D3.js](https://d3js.org/)                       | Map rendering, zoom behavior, and data binding |
-| [TopoJSON](https://github.com/topojson/topojson) | Geographic data (world-atlas)                  |
-| [FastAPI](https://fastapi.tiangolo.com/)         | Backend REST API for AI predictions            |
-| [flagcdn.com](https://flagcdn.com/)              | Country flag images                            |
+| Technology                                                                       | Purpose                                        |
+| -------------------------------------------------------------------------------- | ---------------------------------------------- |
+| [Svelte](https://svelte.dev/) + TypeScript                                       | Frontend framework and type safety             |
+| [Vite](https://vitejs.dev/)                                                      | Build tool and dev server                      |
+| [D3.js](https://d3js.org/)                                                       | Map rendering, zoom behavior, and data binding |
+| [TopoJSON](https://github.com/topojson/topojson)                                 | Geographic data (world-atlas)                  |
+| [FastAPI](https://fastapi.tiangolo.com/)                                         | Backend REST API for AI predictions            |
+| [YouTube IFrame API](https://developers.google.com/youtube/iframe_api_reference) | Embedded music player in Feel panel            |
+| [flagcdn.com](https://flagcdn.com/)                                              | Country flag images                            |
 
 ## Website Snapshots
 
-**Initial Load**: World map with Japanese pigment country colors and the Explore panel idle state
+### Initial Load
+
+World map with Japanese pigment country colors and the Explore panel idle state
+
 <img width="1323" height="637" alt="image" src="https://github.com/user-attachments/assets/d0b2b80d-c1c4-4a92-9728-0b6720917cfa" />
 
-**Explore Mode**: Country selected with flag, language tag, loanword count, search bar, and word cards
+### Explore Mode
+
+Country selected with flag, language tag, loanword count, search bar, and word cards
+
 <img width="1323" height="639" alt="image" src="https://github.com/user-attachments/assets/ee5b1b51-9748-4be1-957d-1857b6a215f9" />
 
 <img width="1323" height="639" alt="image" src="https://github.com/user-attachments/assets/4f0b5a7e-8ac0-4853-bf62-7d63990abe84" />
 
 <img width="1322" height="635" alt="image" src="https://github.com/user-attachments/assets/483437fc-0f41-4029-b87b-b49e2dc90d99" />
 
-**Discover Mode**: Katakana input, Analyze button, disclaimer note, and example word chips
+### Discover Mode
+
+Katakana input, Analyze button, disclaimer note, and example word chips
+
 <img width="1321" height="638" alt="image" src="https://github.com/user-attachments/assets/fb55b7d2-e369-483d-b9f1-ea2f87db5876" />
 
 <img width="1321" height="636" alt="image" src="https://github.com/user-attachments/assets/4bbc3985-5522-4734-9ae4-974a4c3e95b4" />
 
 <img width="1321" height="637" alt="image" src="https://github.com/user-attachments/assets/c64fdde1-0cfb-441b-ab6f-ec9f2cc57eb0" />
+
+### Feel Mode
+
+Emotion input, emotion badge, music player, and related loanwords
 
 ## Setup
 
@@ -100,7 +141,7 @@ npm install
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`. Make sure the FastAPI backend is running before using Discover mode.
+The app will be available at `http://localhost:5173`. Make sure the FastAPI backend is running before using Discover or Feel mode.
 
 ### Build for Production
 
@@ -129,12 +170,13 @@ gairaigo-map/
 │ │ ├── components/
 │ │ │ ├── WorldMap.svelte # D3 map, zoom, pan, country rendering
 │ │ │ ├── ExplorePanel.svelte # Country header, search, word list
-│ │ │ └── DiscoverPanel.svelte # Katakana input, AI prediction, result card
+│ │ │ ├── DiscoverPanel.svelte # Katakana input, AI prediction, result card
+│ │ │ └── FeelPanel.svelte # [NEW] Emotion input, music player, loanword list
 │ │ ├── stores/
-│ │ │ └── mapStore.ts # Shared reactive state (activeIso2, highlights, zoom)
+│ │ │ └── mapStore.ts # Shared reactive state (activeIso2, highlights, zoom, ytPlayer)
 │ │ ├── isoMapping.ts # ISO2 ↔ numeric country code mapping
-│ │ └── types.ts # TypeScript interfaces
-│ ├── App.svelte # Root layout, tab bar, header, footer
+│ │ └── types.ts # TypeScript interfaces (includes EmotionResponse)
+│ ├── App.svelte # Root layout, tab bar (now includes 感情 · Feel tab), header, footer
 │ ├── app.css # Global CSS variables and design tokens
 │ └── main.ts # Entry point
 ├── index.html
